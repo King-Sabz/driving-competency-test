@@ -1,0 +1,20 @@
+[
+    {
+        "id": 1001,
+        "name": "John Doe",
+        "dateOfBirth": "1990-01-01",
+        "address": "123 Main St, Anytown, USA",
+        "licenseType": "Class C",
+        "issueDate": "2020-01-01",
+        "expiryDate": "2025-01-01"
+    },
+    {
+        "id": 1002,
+        "name": "Jane Smith",
+        "dateOfBirth": "1985-05-15",
+        "address": "456 Elm St, Othertown, USA",
+        "licenseType": "Class A",
+        "issueDate": "2019-06-01",
+        "expiryDate": "2024-06-01"
+    }
+]

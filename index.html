@@ -1,0 +1,851 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>DriveComp - Driving Competency Test System</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+        }
+
+        body {
+            background: #f0f4f8;
+            padding: 24px 20px;
+            color: #1e2a3e;
+        }
+
+        /* main container */
+        .app-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* header */
+        .header {
+            background: linear-gradient(135deg, #0b2b3b, #1a4a6f);
+            color: white;
+            padding: 24px 32px;
+            border-radius: 32px;
+            margin-bottom: 28px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            font-weight: 600;
+            font-size: 1.9rem;
+            letter-spacing: -0.5px;
+        }
+        .header p {
+            opacity: 0.85;
+            margin-top: 8px;
+            font-size: 1rem;
+        }
+        .badge {
+            background: #ffb74d;
+            color: #2c3e2f;
+            padding: 6px 12px;
+            border-radius: 40px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-top: 12px;
+        }
+
+        /* two column layout */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 26px;
+        }
+
+        /* card style */
+        .card {
+            background: white;
+            border-radius: 28px;
+            padding: 20px 24px;
+            margin-bottom: 26px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            transition: all 0.2s;
+            border: 1px solid #e2edf2;
+        }
+        .card h2 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            border-left: 6px solid #1e6f5c;
+            padding-left: 14px;
+            margin-bottom: 20px;
+            color: #1f3e48;
+        }
+        .form-group {
+            margin-bottom: 16px;
+        }
+        label {
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: block;
+            margin-bottom: 6px;
+            color: #2c4e62;
+        }
+        input, select, textarea {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 18px;
+            border: 1.5px solid #cbdde6;
+            background: #fefefe;
+            font-size: 0.9rem;
+            transition: 0.2s;
+        }
+        .category-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 10px;
+            margin-top: 8px;
+        }
+        .category-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 12px;
+            border: 1px solid #cbdde6;
+            border-radius: 18px;
+            background: #fefefe;
+            cursor: pointer;
+            transition: 0.2s;
+            font-size: 0.85rem;
+        }
+        .category-option input {
+            width: auto;
+            margin: 0;
+        }
+        .category-option:hover {
+            border-color: #1e6f5c;
+            background: #f7fafc;
+        }
+        input:focus, select:focus {
+            outline: none;
+            border-color: #1e6f5c;
+            box-shadow: 0 0 0 3px rgba(30,111,92,0.2);
+        }
+        button {
+            background: #1e6f5c;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            width: 100%;
+            margin-top: 8px;
+        }
+        button:hover {
+            background: #0e5545;
+            transform: translateY(-1px);
+        }
+        .btn-secondary {
+            background: #3a6b92;
+        }
+        .btn-secondary:hover {
+            background: #2c5373;
+        }
+        .status-message {
+            background: #e9f4f0;
+            border-radius: 20px;
+            padding: 12px;
+            margin-top: 16px;
+            font-size: 0.85rem;
+            border-left: 5px solid #1e6f5c;
+        }
+        .applicant-list {
+            max-height: 280px;
+            overflow-y: auto;
+            margin-top: 12px;
+        }
+        .applicant-item {
+            background: #f9fbfd;
+            border-radius: 20px;
+            padding: 12px;
+            margin-bottom: 10px;
+            border: 1px solid #dee9ef;
+            cursor: pointer;
+            transition: 0.1s;
+        }
+        .applicant-item:hover {
+            background: #e1f0ea;
+        }
+        .applicant-name {
+            font-weight: 700;
+        }
+        .small-text {
+            font-size: 0.7rem;
+            color: #5e7e8f;
+        }
+        .result-badge {
+            display: inline-block;
+            background: #eef2f5;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: bold;
+        }
+        .count-badge {
+            display: inline-block;
+            background: #f4f1ff;
+            color: #4f46e5;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .cert-badge {
+            display: inline-block;
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+        .pass {
+            background: #c8e6d9;
+            color: #006644;
+        }
+        .fail {
+            background: #ffe0db;
+            color: #b13e3e;
+        }
+        hr {
+            margin: 16px 0;
+            border-color: #e2edf2;
+        }
+        .certificate-preview {
+            background: #fef7e0;
+            border-radius: 24px;
+            padding: 16px;
+            border: 1px dashed #d4bc6e;
+            font-family: monospace;
+        }
+        .flex-between {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .qr-sim {
+            font-family: monospace;
+            background: white;
+            padding: 8px;
+            border-radius: 12px;
+            letter-spacing: 2px;
+        }
+        @media (max-width: 880px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .step-flow {
+            background: #f9f7f3;
+            border-radius: 24px;
+            padding: 12px 16px;
+            margin-top: 20px;
+            font-size: 0.7rem;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        .login-card {
+            background: white;
+            border-radius: 28px;
+            padding: 26px 28px;
+            margin-bottom: 24px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e2edf2;
+            max-width: 520px;
+        }
+        .login-card h2 {
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+        .login-help {
+            font-size: 0.9rem;
+            margin-top: 10px;
+            color: #3a556f;
+        }
+        .login-link {
+            color: #1e6f5c;
+            font-weight: 700;
+        }
+        .login-error {
+            margin-top: 12px;
+            padding: 12px;
+            border-radius: 18px;
+            background: #ffe8e6;
+            color: #9b2c2c;
+            border: 1px solid #f1c0be;
+        }
+        #logoutBtn {
+            display: none;
+            margin-top: 16px;
+            background: #c0392b;
+            border-radius: 40px;
+            padding: 10px 16px;
+            width: auto;
+        }
+        #logoutBtn:hover {
+            background: #982d22;
+        }
+        /* Print / PDF styles for professional certificate output */
+        @page { size: A4 portrait; margin: 18mm; }
+        @media print {
+            body * { visibility: hidden; }
+            .printable-certificate, .printable-certificate * { visibility: visible; }
+            .printable-certificate { position: absolute; left: 0; top: 0; width: 100%; }
+        }
+        .printable-certificate {
+            width: 210mm; /* A4 width */
+            min-height: 297mm; /* A4 height */
+            background: white;
+            padding: 28mm 20mm;
+            box-shadow: none;
+            color: #111827;
+            font-family: 'Times New Roman', Georgia, serif;
+        }
+        .printable-certificate .cert-title { text-align: center; font-size: 22px; font-weight: 800; letter-spacing: 1px; }
+        .printable-certificate .cert-sub { text-align: center; font-size: 12px; color: #334155; margin-top:6px }
+        .printable-certificate .cert-body { margin-top: 18mm; font-size: 14px; line-height: 1.5; }
+        .printable-certificate .cert-footer { margin-top: 22mm; display:flex; justify-content:space-between; align-items:center }
+        .printable-certificate .signature { text-align:center }
+    </style>
+    </head>
+    <body>
+    <!-- External libraries for PDF generation -->
+    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<div class="app-container">
+    <div class="header">
+        <h1>🚗 Driving Competency Test Application</h1>
+        <p>End-to-end digital platform | Theory + Practical | Auto certificate generation</p>
+        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
+            <div class="badge">✔ ISO 17024 compliant simulation | Secure workflow</div>
+            <button id="logoutBtn">🚪 Logout</button>
+        </div>
+    </div>
+
+    <div class="login-card" id="loginPanel">
+        <h2>🔐 Admin Login</h2>
+        <p class="login-help">Please authenticate before using the system..</p>
+        <div class="form-group"><label>Username</label><input type="text" id="loginUsername" placeholder="Enter Username"></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="Enter Password"></div>
+        <button id="loginBtn" type="button">🔓 Login</button>
+        <div id="loginError" class="login-error" style="display:none;"></div>
+    </div>
+
+    <div class="dashboard-grid" id="mainApp" style="display:none;">
+        <!-- LEFT PANEL: Registration & Test Scheduling -->
+        <div>
+            <div class="card">
+                <h2>📝 1. Applicant Registration</h2>
+
+                <form action="https://script.google.com/macros/s/AKfycbwN8840wuHObc9Nh4NBnfmeASV23Nlj4WyspzC69gQQrOi47rADFu4LGxNooTmFBWhe/exec" method="post" id="registrationForm">
+                    <div class="form-group">
+                        <label>Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" required placeholder="Joseph T Mendy">
+                    </div>
+
+                    <div class="form-group"><label>National ID / Passport *</label><input type="text" id="nationalId" name="national_id" required placeholder="NID-123456789"></div>
+                    <div class="form-group"><label>Date of Birth *</label><input type="date" id="dob" name="birth_date" required></div>
+                    <div class="form-group"><label>Sex</label><select id="sex" name="sex"><option>Male</option><option>Female</option><option>Other</option></select></div>
+                    <div class="form-group"><label>Phone *</label><input type="tel" id="phone" name="phone" placeholder="+220 1234567"></div>
+                    <div class="form-group"><label>Residential Address</label><input type="text" id="address" placeholder="Banjul, The Gambia" name="address"></div>
+                    <div class="form-group"><label>Driver Training School</label><input type="text" id="school" placeholder="Elite Driving School" name="school"></div>
+                    <div class="form-group"><label>License Category Applied For</label>
+                        <div id="licenseCatGroup" class="category-options">
+                            <label class="category-option"><input type="checkbox" value="A (Private Vehicle Only)">A (Private Vehicle Only)</label>
+                            <label class="category-option"><input type="checkbox" value="B (Motorcycle)">B (Motorcycle)</label>
+                            <label class="category-option"><input type="checkbox" value="BP/T 03 to 10 Pass">BP/T 03 to 10 Pass</label>
+                            <label class="category-option"><input type="checkbox" value="BT/T 03 TONS">BT/T 03 TONS</label>
+                            <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (04 PASSENGERS)">COMMERCIAL PASSENGERS (04 PASSENGERS)</label>
+                            <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (07 PASSENGERS)">COMMERCIAL PASSENGERS (07 PASSENGERS)</label>
+                            <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (10 PASSENGERS)">COMMERCIAL PASSENGERS (10 PASSENGERS)</label>
+                            <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (14 PASSENGERS)">COMMERCIAL PASSENGERS (14 PASSENGERS)</label>
+                            <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (18 PASSENGERS)">COMMERCIAL PASSENGERS (18 PASSENGERS)</label>
+                            <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (22 PASSENGERS)">COMMERCIAL PASSENGERS (22 PASSENGERS)</label>
+                            <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (26 AND ABOVE PASSENGERS)">COMMERCIAL PASSENGERS (26 AND ABOVE PASSENGERS)</label>
+                            <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 03 TONS)">TONAGES (GROUP C 03 TONS)</label>
+                            <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 07 TONS)">TONAGES (GROUP C 07 TONS)</label>
+                            <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 10 TONS)">TONAGES (GROUP C 10 TONS)</label>
+                            <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 15 TONS)">TONAGES (GROUP C 15 TONS)</label>
+                            <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 20 TONS)">TONAGES (GROUP C 20 TONS)</label>
+                            <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 30 TONS OR (C) OPEN)">TONAGES (GROUP C 30 TONS OR (C) OPEN)</label>
+                            <label class="category-option"><input type="checkbox" value="TONAGES (GROUP D FOR TRACTOR/CRANE)">TONAGES (GROUP D FOR TRACTOR/CRANE)</label>
+                        </div>
+                        <div class="small-text" style="margin-top:6px;">Select one or more categories using checkboxes.</div>
+                    </div>
+
+                    <div class="form-group"><label>Upload Passport Photo (simulated)</label><input type="file" accept="image/*" id="photoUpload"></div>
+                    <button type="submit" id="registerBtn">✔ Register Applicant</button>
+                </form>
+                <div id="regMessage" class="status-message" style="display:none;"></div>
+            </div>
+
+            <div class="card">
+                <h2>📅 2. Test Management & Scheduling</h2>
+                <div id="applicantSelector">
+                    <label>Select registered applicant</label>
+                    <select id="scheduleApplicantSelect"></select>
+                </div>
+                <div class="form-group"><label>Test Center</label><input type="text" id="testCenter" value="Banjul Central Testing Grounds" name="venue"></div>
+                <div class="form-group"><label>Examiner Name</label><input type="text" id="examiner" value="Mrs. Fatou Jallow" name="trainers_name"></div>
+                <div class="form-group"><label>Test Date & Time</label><input type="datetime-local" id="testDateTime" name="date_time"></div>
+                <button id="scheduleTestBtn" class="btn-secondary">📌 Schedule Driving Test</button>
+                <div id="scheduleMessage" class="status-message" style="display:none;"></div>
+            </div>
+
+            <div class="card">
+                <h2>📊 Registered Applicants (Database)</h2>
+                <div id="applicantSummary" style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px; font-size:0.85rem; color:#334155;">
+                    <div><strong id="totalApplicants">0</strong> total applicants</div>
+                    <div><strong id="passedApplicants">0</strong> passed</div>
+                    <div><strong id="certifiedApplicants">0</strong> certificates issued</div>
+                </div>
+                <div style="display:flex; gap:10px; flex-wrap:wrap; margin-bottom:12px;">
+                    <button id="exportExcelBtn" class="btn-secondary" style="flex:1; min-width:160px;">📥 Export to Excel</button>
+                </div>
+                <div id="applicantListContainer" class="applicant-list">
+                    <div class="small-text">No applicants yet. Register above.</div>
+                </div>
+                <div class="step-flow">
+                    🔄 Process Flow: Registration → Docs Verification → Test Scheduling → Theory → Practical → Result → Certificate
+                </div>
+            </div>
+        </div>
+
+        <!-- RIGHT PANEL: Assessment, Results, Certificate Generation -->
+        <div>
+            <div class="card">
+                <h2>📖 3. Theory Assessment (50 Q, 70% pass)</h2>
+                <div class="flex-between"><span>Simulated exam score:</span> <strong id="theoryScoreDisplay">—</strong></div>
+                <input type="range" id="theorySlider" min="0" max="50" value="35" step="1">
+                <div>Score: <span id="theoryVal">35</span> / 50 (Pass if ≥35)</div>
+                <button id="recordTheoryBtn">📝 Record Theory Result</button>
+                <div id="theoryStatusMsg" class="small-text" style="margin-top:8px"></div>
+            </div>
+
+            <div class="card">
+                <h2>🚦 4. Practical Driving Assessment (max 100, pass ≥70)</h2>
+                <div class="flex-between"><span>Practical score (0-100):</span> <strong id="practicalScoreDisplay">—</strong></div>
+                <input type="range" id="practicalSlider" min="0" max="100" value="78" step="1">
+                <div>Score: <span id="practicalVal">78</span> / 100 (Pass ≥70)</div>
+                <button id="recordPracticalBtn">🚘 Record Practical Result</button>
+                <div id="practicalStatusMsg" class="small-text" style="margin-top:8px"></div>
+            </div>
+
+            <div class="card">
+                <h2>⚙️ 5. Result Evaluation & Supervisor Approval</h2>
+                <div id="selectedApplicantInfo">No applicant selected for evaluation</div>
+                <button id="evaluateFinalBtn" class="btn-secondary">✅ Compute Overall & Approve</button>
+                <div id="evaluationOutput" class="status-message" style="margin-top:12px;"></div>
+                <button id="resetToRetest" style="background:#b15e3a;">🔄 Simulate Retest (Reset scores for selected)</button>
+            </div>
+
+            <div class="card">
+                <h2>🎓 6. Certificate Generation & Issuance</h2>
+                <div style="display:flex; gap:8px;">
+                    <button id="generateCertBtn" style="background:#2c6e6e;">📜 Generate Competency Certificate</button>
+                    <button id="downloadPdfBtn" style="background:#1e6f5c;" disabled>⬇️ Download PDF</button>
+                    <button id="printCertBtn" style="background:#3a6b92;" disabled>🖨️ Print Certificate</button>
+                </div>
+                <div id="certificatePreview" class="certificate-preview" style="margin-top:16px; display:none;">
+                    <div style="font-weight:bold;">🏆 DRIVING COMPETENCY CERTIFICATE</div>
+                    <hr>
+                    <div id="certDetails"></div>
+                    <div class="qr-sim" id="qrCodeSim">🔲 QR: VERIFY-DCT-XXXX</div>
+                    <div style="font-size:10px; margin-top:8px;">Authorized Signature: Digital Authority</div>
+                </div>
+                <div id="certMessage"></div>
+
+                <!-- Hidden printable certificate for PDF/print output -->
+                <div id="printCertificate" class="printable-certificate" style="display:none;" aria-hidden="true"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // ======================= GOOGLE SHEETS CONFIGURATION =======================
+    // IMPORTANT: Replace this URL with your actual Google Apps Script Web App URL.
+    // Create a new Google Sheet, go to Extensions > Apps Script, paste the provided script,
+    // deploy as Web App (Execute as "Me", Access "Anyone"), and copy the URL here.
+    const GOOGLE_SHEETS_API_URL = "https://script.google.com/macros/s/AKfycbwN8840wuHObc9Nh4NBnfmeASV23Nlj4WyspzC69gQQrOi47rADFu4LGxNooTmFBWhe/exec";
+    // For testing/demo, we'll use a proxy-like fetch that will store data; but we'll implement graceful fallback to localStorage if URL not configured.
+    // But we will build full Google Sheets integration: we will send POST requests to this endpoint.
+    // ==========================================================================
+
+    // ------------------------------
+    // AUTHENTICATION + DATABASE SIMULATION (in-memory + sync with Google Sheets)
+    // ------------------------------
+    const defaultUsername = 'admin';
+    const defaultPassword = 'admin123';
+    let isAuthenticated = false;
+    let applicantsDB = [];      // each applicant: { id, fullName, nationalId, dob, sex, phone, address, school, licenseCategory, photoData, regDate, status, theoryScore, practicalScore, overallResult, testSchedule, examiner, testCenter, testDateTime, certificateIssued, certificateNumber }
+    let nextApplicantId = 1001;
+    let nextCertId = 5000;
+
+    // Helper: Show status messages
+    function showMessage(elementId, message, isError = false) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        el.style.display = 'block';
+        el.innerHTML = message;
+        if (isError) el.style.borderLeftColor = '#c0392b';
+        else el.style.borderLeftColor = '#1e6f5c';
+        setTimeout(() => { if (el) el.style.display = 'none'; }, 4000);
+    }
+
+    // Save to Google Sheets (sends entire array of applicants)
+    async function syncAllToGoogleSheets() {
+        try {
+            const payload = { action: "syncAll", applicants: applicantsDB };
+            const response = await fetch(GOOGLE_SHEETS_API_URL, {
+                method: 'POST',
+                mode: 'no-cors', // For simple CORS-free deployment; but response may be opaque.
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+            console.log("Google Sheets sync triggered (no-cors mode)");
+        } catch (err) {
+            console.warn("Google Sheets sync failed (network/configuration):", err.message);
+            // fallback - no alert, just log.
+        }
+    }
+
+    // Load applicants from Google Sheets (retrieve)
+    async function loadFromGoogleSheets() {
+        try {
+            const response = await fetch(GOOGLE_SHEETS_API_URL + "?action=load");
+            if (response.ok) {
+                const data = await response.json();
+                if (data && Array.isArray(data.applicants)) {
+                    applicantsDB = data.applicants;
+                    // recalc next ids
+                    if (applicantsDB.length) {
+                        nextApplicantId = Math.max(...applicantsDB.map(a => a.id || 1000)) + 1;
+                        nextCertId = Math.max(...applicantsDB.map(a => {
+                            if (a.certificateNumber && typeof a.certificateNumber === 'string') {
+                                const parts = a.certificateNumber.split('-');
+                                if (parts.length === 3) return parseInt(parts[2]) || 5000;
+                            }
+                            return 5000;
+                        }), 5000) + 1;
+                    }
+                    renderApplicantList();
+                    if (applicantsDB.length) selectCurrentApplicant(applicantsDB[0]);
+                    return true;
+                }
+            }
+        } catch (err) {
+            console.warn("Could not load from Google Sheets, using localStorage fallback:", err.message);
+        }
+        // Fallback to localStorage if exists
+        const localData = localStorage.getItem('drivecomp_applicants');
+        if (localData) {
+            try {
+                applicantsDB = JSON.parse(localData);
+                if (applicantsDB.length) {
+                    nextApplicantId = Math.max(...applicantsDB.map(a => a.id || 1000)) + 1;
+                }
+                renderApplicantList();
+                if (applicantsDB.length) selectCurrentApplicant(applicantsDB[0]);
+            } catch(e) {}
+        }
+        return false;
+    }
+
+    // Local save + sync to Google Sheets
+    async function persistData() {
+        localStorage.setItem('drivecomp_applicants', JSON.stringify(applicantsDB));
+        await syncAllToGoogleSheets();
+    }
+
+    // Debounced persist
+    let persistTimer = null;
+    function schedulePersist() {
+        clearTimeout(persistTimer);
+        persistTimer = setTimeout(() => { persistData().catch(()=>{}); }, 600);
+    }
+
+    function renderApplicantList() {
+        const container = document.getElementById('applicantListContainer');
+        const scheduleSelect = document.getElementById('scheduleApplicantSelect');
+        if(!container) return;
+        if(applicantsDB.length === 0) {
+            container.innerHTML = '<div class="small-text">No applicants yet. Register above.</div>';
+            scheduleSelect.innerHTML = '<option disabled selected>-- No applicants --</option>';
+            updateApplicantSummary();
+            schedulePersist();
+            return;
+        }
+        let html = '';
+        applicantsDB.forEach(app => {
+            const resultBadge = app.overallResult ? (app.overallResult === 'PASS' ? '<span class="result-badge pass">PASS</span>' : '<span class="result-badge fail">FAIL</span>') : '<span class="result-badge">Pending</span>';
+            const certBadge = app.certificateIssued ? '<span class="cert-badge">CERTIFIED</span>' : '';
+            const categoryCount = Array.isArray(app.licenseCategory) ? app.licenseCategory.length : (app.licenseCategory ? 1 : 0);
+            const categoryBadge = `<span class="count-badge">${categoryCount} category${categoryCount === 1 ? '' : 'ies'}</span>`;
+            html += `<div class="applicant-item" data-id="${app.id}">
+                        <div class="applicant-name">${escapeHtml(app.fullName)} (${app.nationalId}) ${certBadge}</div>
+                        <div>📋 ${escapeHtml(Array.isArray(app.licenseCategory) ? app.licenseCategory.join(', ') : app.licenseCategory)} ${categoryBadge} | ${resultBadge}</div>
+                        <div class="small-text">Theory: ${app.theoryScore ?? '—'} | Practical: ${app.practicalScore ?? '—'}</div>
+                    </div>`;
+        });
+        container.innerHTML = html;
+        document.querySelectorAll('.applicant-item').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const id = parseInt(el.dataset.id);
+                const applicant = applicantsDB.find(a => a.id === id);
+                if(applicant) selectCurrentApplicant(applicant);
+            });
+        });
+        scheduleSelect.innerHTML = '<option disabled selected>-- Select applicant to schedule --</option>' + 
+            applicantsDB.map(app => `<option value="${app.id}">${escapeHtml(app.fullName)} (${app.nationalId})</option>`).join('');
+        updateApplicantSummary();
+        schedulePersist();
+    }
+
+    let currentSelectedApplicant = null;
+    function selectCurrentApplicant(applicant) {
+        currentSelectedApplicant = applicant;
+        const certificateNote = applicant.certificateIssued ? ` | 🎖 Certificate issued: ${applicant.certificateNumber}` : '';
+        document.getElementById('selectedApplicantInfo').innerHTML = `<strong>Selected:</strong> ${escapeHtml(applicant.fullName)} (ID: ${applicant.id}) | Status: ${applicant.overallResult || 'Not evaluated'}${certificateNote}`;
+        if(applicant.theoryScore != null) {
+            document.getElementById('theorySlider').value = applicant.theoryScore;
+            document.getElementById('theoryVal').innerText = applicant.theoryScore;
+            document.getElementById('theoryScoreDisplay').innerText = applicant.theoryScore;
+        } else {
+            document.getElementById('theorySlider').value = 35;
+            document.getElementById('theoryVal').innerText = 35;
+            document.getElementById('theoryScoreDisplay').innerText = '—';
+        }
+        if(applicant.practicalScore != null) {
+            document.getElementById('practicalSlider').value = applicant.practicalScore;
+            document.getElementById('practicalVal').innerText = applicant.practicalScore;
+            document.getElementById('practicalScoreDisplay').innerText = applicant.practicalScore;
+        } else {
+            document.getElementById('practicalSlider').value = 78;
+            document.getElementById('practicalVal').innerText = 78;
+            document.getElementById('practicalScoreDisplay').innerText = '—';
+        }
+        document.getElementById('theoryStatusMsg').innerHTML = '';
+        document.getElementById('practicalStatusMsg').innerHTML = '';
+        document.getElementById('evaluationOutput').innerHTML = '';
+        document.getElementById('certificatePreview').style.display = applicant.certificateIssued ? 'block' : 'none';
+        if (applicant.certificateIssued) {
+            preparePrintableCertificate(applicant);
+            document.getElementById('downloadPdfBtn').disabled = false;
+            document.getElementById('printCertBtn').disabled = false;
+        } else {
+            document.getElementById('downloadPdfBtn').disabled = true;
+            document.getElementById('printCertBtn').disabled = true;
+        }
+    }
+
+    function updateApplicantSummary() {
+        const total = applicantsDB.length;
+        const passed = applicantsDB.filter(a => a.overallResult === 'PASS').length;
+        const certified = applicantsDB.filter(a => a.certificateIssued).length;
+        document.getElementById('totalApplicants').innerText = total;
+        document.getElementById('passedApplicants').innerText = passed;
+        document.getElementById('certifiedApplicants').innerText = certified;
+        const exportBtn = document.getElementById('exportExcelBtn');
+        if(exportBtn) exportBtn.disabled = total === 0;
+    }
+
+    function exportToExcel() {
+        if(applicantsDB.length === 0) return alert('No applicant records to export.');
+        const sheetData = applicantsDB.map(app => ({
+            'Applicant ID': app.id,
+            Name: app.fullName,
+            'National ID': app.nationalId,
+            'Date of Birth': app.dob,
+            Sex: app.sex,
+            Phone: app.phone,
+            Address: app.address,
+            'Driver School': app.school,
+            'License Category': Array.isArray(app.licenseCategory) ? app.licenseCategory.join(', ') : app.licenseCategory,
+            'Registered On': app.regDate ? new Date(app.regDate).toLocaleString('en-GB') : '',
+            'Test Center': app.testCenter || '',
+            Examiner: app.examiner || '',
+            'Test Date': app.testDateTime ? new Date(app.testDateTime).toLocaleString('en-GB') : '',
+            'Theory Score': app.theoryScore != null ? app.theoryScore : '',
+            'Practical Score': app.practicalScore != null ? app.practicalScore : '',
+            'Overall Result': app.overallResult || 'Pending',
+            'Certificate Issued': app.certificateIssued ? 'Yes' : 'No',
+            'Certificate Number': app.certificateNumber || '',
+        }));
+        const worksheet = XLSX.utils.json_to_sheet(sheetData);
+        const workbook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(workbook, worksheet, 'Applicants');
+        XLSX.writeFile(workbook, `Driving_Certificate_Applicants_${new Date().toISOString().slice(0,10)}.xlsx`);
+    }
+
+    function escapeHtml(str) { if(!str) return ''; return str.replace(/[&<>]/g, function(m){if(m==='&') return '&amp;'; if(m==='<') return '&lt;'; if(m==='>') return '&gt;'; return m;}); }
+
+    // Registration with Google Sheets sync
+    document.getElementById('registrationForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const fullName = document.getElementById('fullName').value.trim();
+        const nationalId = document.getElementById('nationalId').value.trim();
+        const dob = document.getElementById('dob').value;
+        const sex = document.getElementById('sex').value;
+        const phone = document.getElementById('phone').value.trim();
+        const address = document.getElementById('address').value;
+        const school = document.getElementById('school').value;
+        const licenseCategory = Array.from(document.querySelectorAll('#licenseCatGroup input[type="checkbox"]:checked')).map(input => input.value);
+        const photoFile = document.getElementById('photoUpload').files[0];
+        let photoData = photoFile ? photoFile.name : 'simulated-photo.jpg';
+        let birthDate = new Date(dob);
+        let today = new Date();
+        let age = today.getFullYear() - birthDate.getFullYear();
+        let m = today.getMonth() - birthDate.getMonth();
+        if(m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) age--;
+        if(age < 18) { showMessage('regMessage', '❌ Age verification failed: Applicant must be at least 18 years old.', true); return; }
+        if(!fullName || !nationalId || !dob || !phone) { showMessage('regMessage', '⚠️ Mandatory fields missing.', true); return; }
+        if(licenseCategory.length === 0) { showMessage('regMessage', '⚠️ Select at least one license category.', true); return; }
+        if(applicantsDB.find(a => a.nationalId === nationalId)) { showMessage('regMessage', '⚠️ Duplicate National ID.', true); return; }
+        const newApplicant = {
+            id: nextApplicantId++,
+            fullName, nationalId, dob, sex, phone, address, school, licenseCategory,
+            photoData, regDate: new Date().toISOString(),
+            status: 'REGISTERED',
+            theoryScore: null, practicalScore: null, overallResult: null,
+            testSchedule: null, examiner: null, testCenter: null, testDateTime: null,
+            certificateIssued: false, certificateNumber: null
+        };
+        applicantsDB.push(newApplicant);
+        await persistData();
+        renderApplicantList();
+        showMessage('regMessage', `✅ Applicant Registered! ID: ${newApplicant.id}`);
+        document.getElementById('registrationForm').reset();
+        if(!currentSelectedApplicant) selectCurrentApplicant(newApplicant);
+    });
+
+    // Schedule test & persist
+    document.getElementById('scheduleTestBtn').addEventListener('click', async () => {
+        const selectElem = document.getElementById('scheduleApplicantSelect');
+        const applicantId = parseInt(selectElem.value);
+        if(!applicantId) { showMessage('scheduleMessage', '⚠️ Select an applicant.', true); return; }
+        const applicant = applicantsDB.find(a => a.id === applicantId);
+        if(!applicant) return;
+        const testCenter = document.getElementById('testCenter').value;
+        const examiner = document.getElementById('examiner').value;
+        const testDateTime = document.getElementById('testDateTime').value;
+        if(!testDateTime) { showMessage('scheduleMessage', '⚠️ Select test date & time.', true); return; }
+        applicant.testCenter = testCenter; applicant.examiner = examiner; applicant.testDateTime = testDateTime; applicant.status = 'SCHEDULED';
+        await persistData();
+        renderApplicantList();
+        showMessage('scheduleMessage', `✅ Test scheduled for ${applicant.fullName} on ${new Date(testDateTime).toLocaleString()}.`);
+        if(currentSelectedApplicant?.id === applicant.id) selectCurrentApplicant(applicant);
+    });
+
+    // Theory & Practical
+    document.getElementById('recordTheoryBtn').addEventListener('click', async () => {
+        if(!currentSelectedApplicant) { alert('Select an applicant.'); return; }
+        currentSelectedApplicant.theoryScore = parseInt(document.getElementById('theorySlider').value);
+        document.getElementById('theoryScoreDisplay').innerText = currentSelectedApplicant.theoryScore;
+        document.getElementById('theoryStatusMsg').innerHTML = `📖 Theory score: ${currentSelectedApplicant.theoryScore}/50`;
+        await persistData(); renderApplicantList();
+    });
+    document.getElementById('recordPracticalBtn').addEventListener('click', async () => {
+        if(!currentSelectedApplicant) { alert('Select an applicant.'); return; }
+        currentSelectedApplicant.practicalScore = parseInt(document.getElementById('practicalSlider').value);
+        document.getElementById('practicalScoreDisplay').innerText = currentSelectedApplicant.practicalScore;
+        document.getElementById('practicalStatusMsg').innerHTML = `🚗 Practical score: ${currentSelectedApplicant.practicalScore}/100`;
+        await persistData(); renderApplicantList();
+    });
+    document.getElementById('evaluateFinalBtn').addEventListener('click', async () => {
+        if(!currentSelectedApplicant) { alert('Select an applicant.'); return; }
+        const app = currentSelectedApplicant;
+        if(app.theoryScore === null || app.practicalScore === null) { document.getElementById('evaluationOutput').innerHTML = '⚠️ Please record both theory and practical scores.'; return; }
+        const theoryPass = app.theoryScore >= 35, practicalPass = app.practicalScore >= 70;
+        app.overallResult = (theoryPass && practicalPass) ? 'PASS' : 'FAIL';
+        document.getElementById('evaluationOutput').innerHTML = `<strong>Result: ${app.overallResult}</strong>`;
+        await persistData(); renderApplicantList(); selectCurrentApplicant(app);
+    });
+    document.getElementById('resetToRetest').addEventListener('click', async () => {
+        if(!currentSelectedApplicant) return;
+        currentSelectedApplicant.theoryScore = null; currentSelectedApplicant.practicalScore = null; currentSelectedApplicant.overallResult = null; currentSelectedApplicant.certificateIssued = false; currentSelectedApplicant.certificateNumber = null;
+        await persistData(); renderApplicantList(); selectCurrentApplicant(currentSelectedApplicant);
+        document.getElementById('evaluationOutput').innerHTML = '🔄 Retest mode activated.';
+    });
+    document.getElementById('generateCertBtn').addEventListener('click', async () => {
+        if(!currentSelectedApplicant) { alert('Select an applicant.'); return; }
+        const app = currentSelectedApplicant;
+        if(app.overallResult !== 'PASS') { document.getElementById('certMessage').innerHTML = '❌ Only PASS results can generate certificate.'; return; }
+        if(app.certificateIssued) { document.getElementById('certMessage').innerHTML = '⚠️ Certificate already issued.'; return; }
+        const certNumber = `DCT-${new Date().getFullYear()}-${(nextCertId++)}`;
+        app.certificateNumber = certNumber; app.certificateIssued = true;
+        const issueDate = new Date().toLocaleDateString('en-GB');
+        document.getElementById('certificatePreview').style.display = 'block';
+        document.getElementById('certDetails').innerHTML = `<strong>Certificate No:</strong> ${certNumber}<br><strong>Name:</strong> ${escapeHtml(app.fullName)}<br><strong>Category:</strong> ${Array.isArray(app.licenseCategory) ? app.licenseCategory.join(', ') : app.licenseCategory}<br><strong>Issue Date:</strong> ${issueDate}`;
+        document.getElementById('qrCodeSim').innerHTML = `🔲 QR:VERIFY|${certNumber}|${app.nationalId}`;
+        preparePrintableCertificate(app);
+        document.getElementById('downloadPdfBtn').disabled = false; document.getElementById('printCertBtn').disabled = false;
+        document.getElementById('certMessage').innerHTML = `✅ Certificate ${certNumber} generated.`;
+        await persistData(); renderApplicantList();
+    });
+    function preparePrintableCertificate(app) { /* same as original but dynamic */ 
+         const issueDate = new Date().toLocaleDateString('en-GB');
+        const selectedCategories = Array.isArray(app.licenseCategory) ? app.licenseCategory.join(', ') : app.licenseCategory;
+        const certHtml = `
+            <div style="width:100%; border:6px solid #0e4a3f; padding:18px; box-sizing:border-box; height:100%; display:flex; flex-direction:column; justify-content:space-between;">
+                <div>
+                    <div style="display:flex; justify-content:space-between; align-items:center;">
+                        <div style="font-size:14px; color:#0b3a2f;"><strong>DriveComp</strong><br><span style='font-size:11px'>Driving Competency Test Authority</span></div>
+                        <div style="text-align:right; font-size:12px; color:#334155">Certificate No: <strong>${app.certificateNumber}</strong><br>Issued: ${issueDate}</div>
+                    </div>
+                    <h1 class="cert-title">DRIVING COMPETENCY CERTIFICATE</h1>
+                    <div class="cert-sub">Official Competency Issuance — Verified by Digital Authority</div>
+                    <div class="cert-body">
+                        <p>This certifies that <strong>${escapeHtml(app.fullName)}</strong> (National ID: <strong>${app.nationalId}</strong>) has successfully completed and passed the required theory and practical driving assessments for license category <strong>${escapeHtml(selectedCategories)}</strong>.</p>
+                        <p>Test Center: ${escapeHtml(app.testCenter || 'N/A')} — Examiner: ${escapeHtml(app.examiner || 'N/A')} — Test Date: ${app.testDateTime ? new Date(app.testDateTime).toLocaleDateString() : 'N/A'}</p>
+                        <p>Result: <strong>PASS</strong> — This certificate is digitally signed and verifiable via the QR code / certificate number.</p>
+                    </div>
+                </div>
+                <div class="cert-footer">
+                    <div class="signature">
+                        <div style="border-top:1px solid #111; width:180px; margin-bottom:6px"></div>
+                        <div style="font-size:12px">Authorized Signature</div>
+                    </div>
+                    <div style="text-align:center">
+                        <div style="display:inline-block; padding:8px; border:2px solid #111;">${escapeHtml('QR:VERIFY|' + app.certificateNumber + '|' + app.nationalId)}</div>
+                        <div style="font-size:10px; margin-top:6px">Digital verification available online</div>
+                    </div>
+                    <div style="width:160px; text-align:right; font-size:11px; color:#475569">Authority Stamp</div>
+                </div>
+            </div>
+        `;
+        const container = document.getElementById('printCertificate');
+        container.innerHTML = certHtml;
+        container.style.display = 'block';
+    }
+    async function downloadCertificatePDF() { /* simplified */ const el = document.getElementById('printCertificate'); if(!el) return; const canvas = await html2canvas(el, { scale:2 }); const imgData = canvas.toDataURL('image/png'); const { jsPDF } = window.jspdf; const pdf = new jsPDF('p','mm','a4'); pdf.addImage(imgData, 'PNG', 0, 0, 210, 297); pdf.save('certificate.pdf'); }
+    function printCertificate() { const printContents = document.getElementById('printCertificate').innerHTML; const win = window.open('', '_blank'); win.document.write(`<html><head><title>Certificate</title></head><body>${printContents}</body></html>`); win.print(); }
+    document.getElementById('downloadPdfBtn').addEventListener('click', downloadCertificatePDF);
+    document.getElementById('printCertBtn').addEventListener('click', printCertificate);
+    document.getElementById('exportExcelBtn').addEventListener('click', exportToExcel);
+    document.getElementById('theorySlider').addEventListener('input', (e)=>document.getElementById('theoryVal').innerText=e.target.value);
+    document.getElementById('practicalSlider').addEventListener('input', (e)=>document.getElementById('practicalVal').innerText=e.target.value);
+
+    // Auth
+    function authenticateUser() { if(document.getElementById('loginUsername').value===defaultUsername && document.getElementById('loginPassword').value===defaultPassword){ isAuthenticated=true; document.getElementById('loginPanel').style.display='none'; document.getElementById('mainApp').style.display='grid'; document.getElementById('logoutBtn').style.display='inline-flex'; return true; } else { document.getElementById('loginError').innerText='Invalid credentials'; document.getElementById('loginError').style.display='block'; return false; } }
+    document.getElementById('loginBtn').addEventListener('click', ()=>{ if(authenticateUser()) loadFromGoogleSheets(); });
+    document.getElementById('logoutBtn').addEventListener('click', ()=>{ isAuthenticated=false; document.getElementById('mainApp').style.display='none'; document.getElementById('loginPanel').style.display='block'; document.getElementById('logoutBtn').style.display='none'; });
+    window.addEventListener('load', () => { document.getElementById('loginUsername').value='admin'; document.getElementById('loginPassword').value='admin123'; });
+</script>
+</body>
+</html>
