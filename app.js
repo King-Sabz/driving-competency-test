@@ -422,6 +422,12 @@ async function loadFromGoogleSheets() {
         const result = await response.json();
         console.log('Load response:', result);
 
+        // Ensure passportPhoto is properly preserved when loading from storage
+applicantsDB = applicantsDB.map(app => ({
+    ...app,
+    passportPhoto: app.passportPhoto || getDefaultPlaceholder()
+}));
+
         if (result && result.success && result.data && Array.isArray(result.data.applicants)) {
             applicantsDB = result.data.applicants;
 
@@ -566,6 +572,7 @@ function renderAll() {
 }
 
 function renderApplicantList() {
+    <div class="applicant-item" data-id="${app.id}" data-photo="${escapeHtml(app.passportPhoto || '')}"></div>
     var container = document.getElementById('applicantListContainer');
     if (!container) return;
 
@@ -597,7 +604,11 @@ function renderApplicantList() {
             metaInfo += ' | Evaluated by: ' + escapeHtml(app.evaluatedBy);
         }
 
+        
+
         html +=
+
+            <div class="applicant-item" data-id="${app.id}" data-photo="${escapeHtml(app.passportPhoto || '')}"></div>
             '<div class="applicant-item" data-id="' + app.id + '" onclick="selectApplicant(' +
             app.id + ')">' +
             '<div class="applicant-name">#' + app.id + ' ' + escapeHtml(app.fullName) + ' ' + certBadge +
