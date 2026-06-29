@@ -994,24 +994,24 @@
                         <div class="form-group"><label>Driver Training School</label><input type="text" id="school" placeholder="Elite Driving School" name="school"></div>
                         <div class="form-group"><label>License Category Applied For</label>
                             <div id="licenseCatGroup" class="category-options">
-                                <label class="category-option"><input type="checkbox" value="A (Private Vehicle Only)">A (Private Vehicle Only)</label>
+                                <label class="category-option"><input type="checkbox" value="A (Private Vehicle)">A (Private Vehicle)</label>
                                 <label class="category-option"><input type="checkbox" value="B (Motorcycle)">B (Motorcycle)</label>
-                                <label class="category-option"><input type="checkbox" value="BP/T 03 to 10 Pass">BP/T 03 to 10 Pass</label>
+                                <label class="category-option"><input type="checkbox" value="BC/PASSENGER 03 to 10 PASSENGER">BC/PASSENGER 03 to 10 PASSENGER</label>
                                 <label class="category-option"><input type="checkbox" value="BT/T 03 TONS">BT/T 03 TONS</label>
-                                <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (04 PASSENGERS)">COMMERCIAL PASSENGERS (04 PASSENGERS)</label>
-                                <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (07 PASSENGERS)">COMMERCIAL PASSENGERS (07 PASSENGERS)</label>
-                                <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (10 PASSENGERS)">COMMERCIAL PASSENGERS (10 PASSENGERS)</label>
-                                <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (14 PASSENGERS)">COMMERCIAL PASSENGERS (14 PASSENGERS)</label>
-                                <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (18 PASSENGERS)">COMMERCIAL PASSENGERS (18 PASSENGERS)</label>
-                                <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (22 PASSENGERS)">COMMERCIAL PASSENGERS (22 PASSENGERS)</label>
-                                <label class="category-option"><input type="checkbox" value="COMMERCIAL PASSENGERS (26 AND ABOVE PASSENGERS)">COMMERCIAL PASSENGERS (26 AND ABOVE PASSENGERS)</label>
-                                <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 03 TONS)">TONAGES (GROUP C 03 TONS)</label>
-                                <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 07 TONS)">TONAGES (GROUP C 07 TONS)</label>
-                                <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 10 TONS)">TONAGES (GROUP C 10 TONS)</label>
-                                <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 15 TONS)">TONAGES (GROUP C 15 TONS)</label>
-                                <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 20 TONS)">TONAGES (GROUP C 20 TONS)</label>
-                                <label class="category-option"><input type="checkbox" value="TONAGES (GROUP C 30 TONS OR (C) OPEN)">TONAGES (GROUP C 30 TONS OR (C) OPEN)</label>
-                                <label class="category-option"><input type="checkbox" value="TONAGES (GROUP D FOR TRACTOR/CRANE)">TONAGES (GROUP D FOR TRACTOR/CRANE)</label>
+                                <label class="category-option"><input type="checkbox" value="C04 PASSENGERS">C04 PASSENGERS</label>
+                                <label class="category-option"><input type="checkbox" value="C07 PASSENGERS">C07 PASSENGERS</label>
+                                <label class="category-option"><input type="checkbox" value="C10 PASSENGERS">C10 PASSENGERS</label>
+                                <label class="category-option"><input type="checkbox" value="C14 PASSENGERS">C14 PASSENGERS</label>
+                                <label class="category-option"><input type="checkbox" value="C18 PASSENGERS">C18 PASSENGERS</label>
+                                <label class="category-option"><input type="checkbox" value="C22 PASSENGERS">C22 PASSENGERS</label>
+                                <label class="category-option"><input type="checkbox" value="C26 AND ABOVE PASSENGERS">C26 AND ABOVE PASSENGERS</label>
+                                <label class="category-option"><input type="checkbox" value="C03 TONS">C03 TONS</label>
+                                <label class="category-option"><input type="checkbox" value="C07 TONS">C07 TONS</label>
+                                <label class="category-option"><input type="checkbox" value="C10 TONS">C10 TONS</label>
+                                <label class="category-option"><input type="checkbox" value="C15 TONS">C15 TONS</label>
+                                <label class="category-option"><input type="checkbox" value="C20 TONS">C20 TONS</label>
+                                <label class="category-option"><input type="checkbox" value="C30 TONS AND ABOVE">C30 TONS AND ABOVE</label>
+                                <label class="category-option"><input type="checkbox" value="D FOR TRACTOR/CRANE">D FOR TRACTOR/CRANE</label>
                             </div>
                             <div class="small-text" style="margin-top:6px;">Select one or more categories using checkboxes.</div>
                         </div>
@@ -1178,8 +1178,8 @@
             'Field Officer': { 
                 password: 'Sup!26@$', 
                 role: 'supervisor', 
-                name: 'Test Supervisor',
-                permissions: ['view_all', 'evaluate_all', 'schedule_tests', 'generate_certificates', 'record_scores']
+                name: 'Testing Officer',
+                permissions: ['view_all', 'evaluate_all', 'schedule_tests', 'generate_certificates', 'record_scores', 'register_applicants', 'schedule_tests', 'record_scores']
             },
             // 'Examiner': { 
             //     password: 'Emr@2!6', 
@@ -2198,6 +2198,8 @@ const photoSrc = app.passportPhoto ? app.passportPhoto + '?t=' + Date.now() : ge
                                 the required theory and practical driving assessments for license category 
                                 <strong style="color:#0b3a2f;">${escapeHtml(selectedCategories)}</strong>.
                             </p>
+                            <P>Under the provisions of section 37 of the motor traffic ordinance, 1955.</P>
+                            
                             <p style="margin-bottom:4mm; text-align:justify;">
                                 <span style="font-weight:600;">Test Center:</span> ${escapeHtml(app.testCenter || 'N/A')} &nbsp;|&nbsp; 
                                 <span style="font-weight:600;">Examiner:</span> ${escapeHtml(app.examiner || 'N/A')} &nbsp;|&nbsp; 
